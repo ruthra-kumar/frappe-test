@@ -19,3 +19,8 @@ flask run
 
 # Screenshots
 ![Alt text](screenshots/Image1.png?raw=true "Screen 1")
+![Alt text](screenshots/Image2.png?raw=true "Screen 2")
+![Alt text](screenshots/Image3.png?raw=true "Screen 3")
+![Alt text](screenshots/Image4.png?raw=true "Screen 4")
+![Alt text](screenshots/Image5.png?raw=true "Screen 5")
+![Alt text](screenshots/Image6.png?raw=true "Screen 6")
