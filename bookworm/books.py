@@ -49,7 +49,7 @@ def addbooks():
                     return_msg['message'].append('Books Added')
                 except Exception as commit_exception:
                     current_app.logger.debug(commit_exception.args)
-                    return_msg['message'].append('commit_exception.args')
+                    return_msg['message'].append(commit_exception.args)
                     session.rollback()
         except Exception as unknown:
 
