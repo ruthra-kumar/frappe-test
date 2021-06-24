@@ -23,7 +23,7 @@ def addbooks():
         try:
             session = current_app.config['DB_SESSIONMAKER']()
             content = request.get_json()
-            return_msg  ={ 'message': ''}
+            return_msg  ={ 'message': []}
 
             if 'newbooks' in content.keys():
                 for x in content['newbooks']:
@@ -46,15 +46,15 @@ def addbooks():
                 try:
                     session.commit()
                     current_app.logger.debug('Books added')
-                    return_msg['message'] = 'Books Added'
+                    return_msg['message'].append('Books Added')
                 except Exception as commit_exception:
                     current_app.logger.debug(commit_exception.args)
-                    return_msg['message'] = commit_exception.args
+                    return_msg['message'].append('commit_exception.args')
                     session.rollback()
         except Exception as unknown:
 
             current_app.logger.debug(type(unknown),unknown.args)
-            return_msg['message'] = unknown.args
+            return_msg['message'].append(unknown.args)
 
         session.close()
         return jsonify(return_msg)

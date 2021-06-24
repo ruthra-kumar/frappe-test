@@ -23,7 +23,7 @@ def addmembers():
             session = current_app.config['DB_SESSIONMAKER']()
             ret = None
             content = request.get_json()
-            return_msg = { 'message': '' }
+            return_msg = { 'message': [] }
             
             if 'newmembers' in content.keys():
                 for x in content['newmembers']:
@@ -37,14 +37,14 @@ def addmembers():
 
                 try:
                     session.commit()
-                    return_msg['message'] = 'Members Added'
+                    return_msg['message'].append('Members Added')
                     current_app.logger.info('Members Added')
                 except Exception as e:
                     session.rollback()
-                    return_msg['message'] = e.args
+                    return_msg['message'].append(e.args)
                     current_app.logger.error(e.args)
             else:
-                return_msg['message'] = 'New Members data missing'
+                return_msg['message'].append('New Members data missing')
                 current_app.logger.debug('New Members data missing')
 
         # Payload issues
