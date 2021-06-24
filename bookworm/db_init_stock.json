@@ -1,0 +1,47 @@
+[
+    {
+	"bookid": 100,
+	"title": "The Mystical Poems of Rumi 1: First Selection  Poems 1-200",
+	"authors": "Rumi/A.J. Arberry",
+	"isbn13": "9780226731513",
+	"publication_date": "1974-3-15",
+	"publisher": "University Of Chicago Press",
+	"quantity": 10
+    },
+    {
+	"bookid": 101,
+	"title": "Seven Nights",
+	"authors": "Jorge Luis Borges/Eliot Weinberger",
+	"isbn13": "9780811209052",
+	"publication_date": "1985-5-29",
+	"publisher": "New Directions Publishing Corporation",
+	"quantity": 10
+    },
+    {
+	"bookid": 102,
+	"title": "Imajica: The Reconciliation",
+	"authors": "Clive Barker",
+	"isbn13": "9780061094156",
+	"publication_date": "1995-5-10",
+	"publisher": "HarperTorch",
+	"quantity": 10
+    },
+    {
+	"bookid": 103,
+	"title": "Pégate un tiro para sobrevivir: un viaje personal por la América de los mitos",
+	"authors": "Chuck Klosterman",
+	"isbn13": "9788439720034",
+	"publication_date": "2006-2-28",
+	"publisher": "Literatura Random House",
+	"quantity": 10
+    },
+    {
+	"bookid": 104,
+	"title": "Eats  Shoots & Leaves: Why  Commas Really Do Make a Difference!",
+	"authors": "Lynne Truss/Bonnie Timmons",
+	"isbn13": "9780399244919",
+	"publication_date": "2006-7-25",
+	"publisher": "G.P. Putnam's Sons Books for Young Readers",
+	"quantity": 10
+    }
+]

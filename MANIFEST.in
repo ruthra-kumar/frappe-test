@@ -1,0 +1,3 @@
+graft bookworm/static
+graft bookworm/templates
+global-exclude *.pyc
