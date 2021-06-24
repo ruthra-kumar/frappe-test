@@ -18,5 +18,4 @@ flask run
 ```
 
 # Screenshots
-
-
+![Alt text](screenshots/Image1.png?raw=true "Screen 1")
