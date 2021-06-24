@@ -188,3 +188,14 @@ a {
     display: grid;
     justify-self: stretch;
 }
+.msg-container {
+    height: 40px;
+    width: 100%;
+    overflow-y:scroll;
+    border: 0px;
+    font-family: lato;
+    font-size: smaller;
+    margin-bottom: 10px;
+}
+.message {
+}

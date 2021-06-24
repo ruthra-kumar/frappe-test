@@ -361,7 +361,6 @@ function vuetable(rows, cols, options){
 var msg = new Vue({
     el: '#msg_box',
     data: {
-	feedback: "",
 	messages: [],
     },
 })

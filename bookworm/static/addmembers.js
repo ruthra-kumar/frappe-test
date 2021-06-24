@@ -43,7 +43,7 @@ var books_db = new Vue({
 		    newmembers:  members
 		})
 		.then(response => {
-		    msg.messages = response.data;
+		    msg.messages = response.data['message'];
 		})
 	}
     }

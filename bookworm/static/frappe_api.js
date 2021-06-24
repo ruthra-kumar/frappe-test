@@ -98,7 +98,7 @@ var frappe_library = new Vue({
 		    newbooks:  books
 		})
 		.then(response => {
-		    msg.messages = response.data;
+		    msg.messages = response.data['message'];
 		})
 	}
     }

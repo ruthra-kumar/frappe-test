@@ -128,9 +128,9 @@
       {% block message %}
       {% raw %}
       <section>
-	<div id="msg_box" class="container">
+	<div id="msg_box" class="msg-container">
 	  <ul>
-	    <li v-for="msg in messages">
+	    <li class="message" v-for="msg in messages">
 	      {{ msg }}
 	    </li>
 	  </ul>
