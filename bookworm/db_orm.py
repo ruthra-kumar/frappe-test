@@ -1,7 +1,9 @@
 import datetime
 import sqlalchemy
 import click
+import flask
 
+from flask import current_app
 from flask.cli import with_appcontext
 from sqlalchemy import create_engine, Column, Integer, BigInteger, DateTime, String, Sequence, Date, Float, Boolean, ForeignKey, Table, exc
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship, backref
@@ -100,20 +102,56 @@ class BookIssue(Base):
     def __repr__(self):
         return "<BookIssue(transactionid={}', bookid={}, memberid={}, created_on={}, issued_date={}, returned_date={}, active={})>".format(self.transactionid, self.bookid, self.memberid, None if self.created_on == None else self.created_on.strftime("%Y-%m-%d"), None if self.issued_date == None else self.issued_date.strftime("%Y-%m-%d"), None if self.returned_date == None else self.returned_date.strftime("%Y-%m-%d"), self.active)
 
+def init_book_stock(app):
+    # initialize book stock
+    session = app.config['DB_SESSIONMAKER']()
+    books = flask.json.loads(app.open_resource("db_init_stock.json").read())
+    for x in books:
+        bk = Book()
+        if x['bookid']:
+            bk.bookid = x['bookid']
+
+        bk.title = x['title']
+        bk.authors = x['authors']
+        bk.isbn13 = x['isbn13']
+        bk.publication_date = datetime.datetime.strptime(x['publication_date'], "%Y-%m-%d")
+        bk.publisher = x['publisher']
+        sk = Stock()
+        sk.available_quantity = x['quantity']
+        sk.total_quantity = x['quantity']
+        bk.stock = sk
+        session.add(bk)
+        session.add(sk)
+        
+    try:
+        session.commit()
+        click.echo('Book stock has been initialized')
+    except Exception as unknown:
+        click.echo('Unable to initialize book stock')
+
+    session.close()
+    
 def init_db(app):
     Base.metadata.create_all(app.config['DB_ENGINE'])
     app.config.from_mapping(
         DB_SESSION = app.config['DB_SESSIONMAKER']()
     )
+    
 
 def init_cli_command(app):
     @app.cli.command('init-db')
     def init_db_command():
         init_db(app)
-        click.echo('Database Initialized')
+        click.echo('Database initialized')
+        init_book_stock(app)
 
     app.cli.add_command(init_db_command)
 
+def init_db_command(app):
+    init_db(app)
+    click.echo('Database initialized.')
+    init_book_stock(app);
+    
 def configure_session(app):
     # add cli command for database initialization
     init_cli_command(app)
@@ -124,7 +162,7 @@ def configure_session(app):
                                connect_args={"check_same_thread": False},
                                poolclass=StaticPool)
     else:
-        engine = create_engine("sqlite:///"+app.config['DATABASE'],
+        engine = create_engine("sqlite:///" + app.config['DATABASE'],
                                connect_args={"check_same_thread": False})
 
     Session = sessionmaker(bind=engine)
@@ -136,6 +174,4 @@ def configure_session(app):
     # If in testing mode, create a temporary database
     if app.config['TESTING'] == True:
         init_db(app)
-
-
 
