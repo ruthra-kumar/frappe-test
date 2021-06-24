@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %} {{ content['title'] }} {% endblock %}
+{% block header %} {{ super() }}  {% endblock header %}
+{% block document %} {{ super() }} {% endblock document %}
+{% block content %} {% raw %}
+
+<section id='bookissue'>
+  <input type="button" value="Issue Book" v-on:click="issueBook"/>
+  <br><br>
+  <label for="issue_date">Issued on:</label>
+  <input type="date" v-model="issueDate"/><br>
+  <br>
+  <div class="grid-issuelist">
+    <div class="grid-issuelist-item">Select Book</div>
+    <div class="grid-issuelist-item">Select Member</div>
+    <div class="grid-issuelist-item"><input style="" id="searchbook" type="text" v-model="searchBook" placeholder="Filter Books"/></div>
+    <div class="grid-issuelist-item"><input id="searchmember" type="text" v-model="searchMember" placeholder="Filter Members"/></div>
+    <div class="grid-issuelist-item">
+      <select style="width:400px;" id="sel1" title="Select a book" v-model="selectedBook" size="10" required>
+	<option v-for="bk in filteredBooks" v-bind:value="bk">{{bk.title}}</option>
+      </select>
+    </div>
+    <div class="grid-issuelist-item">
+      <select id="sel2" title="Select a member" v-model="selectedMember" size="10" required>
+	<option v-for="mem in filteredMembers" v-bind:value="mem"> {{mem.first_name}} {{mem.last_name}}</option>
+      </select>
+    </div>
+  </div>
+</section>
+{% endraw %}
+{% endblock content%}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='issuebooks.js') }}"></script>
+{% endblock scripts %}

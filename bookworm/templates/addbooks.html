@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %} {{ content['title'] }} {% endblock %}
+{% block header %} {{ super() }}  {% endblock header %}
+{% block document %} {{ super() }} {% endblock document %}
+{% block content %} {% raw %}
+<section>
+  <div id="addbooks">
+    <input type="button" value="Save" v-on:click="savedb"/>
+    <form id="form">
+      <div id="form-title">Add Books</div>
+      <div id="form-content">
+	<label for="bookid">BookID:</label>
+	<input id="bookid" type="number" v-model="newEntry.bookid" min="1"/>
+	<label for="title">Title:</label>
+	<input id="title" type="text" v-model="newEntry.title" />
+	<label for="authors">Authors:</label>
+	<input id="authors" type="text" v-model="newEntry.authors" />
+	<label for="isbn13">ISBN13:</label>
+	<input id="isbn13" type="text" v-model="newEntry.isbn13" />
+	<label for="publication_date">Published on:</label>
+	<input id="publication_date" type="date" v-model="newEntry.publication_date" />
+	<label for="publisher">Publisher:</label>
+	<input id="publisher" type="text" v-model="newEntry.publisher" />
+	<label for="quantity">Quantity:</label>
+	<input id="quantity" type="number" v-model="newEntry.quantity" max="4000" min="0"/>
+	<br>
+	<input type="Submit" value="Add" v-on:click.prevent="addEntry"/>
+      </div>
+    </form>
+
+  </div>
+</section>
+
+<section id='tableapp1'>
+  <vuegrid
+    :columns="columns"
+    :table_data="table_records"
+    :options="table_options"
+    :sort-order="sortOrder"
+    @sort="sortBy"
+    @delete_operation="deleteOperation"
+    @update_row="updateRow"
+    @add_row="addRow">
+  </vuegrid>
+
+</section>
+
+{% endraw %}
+{% endblock content%}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='addbooks.js') }}"></script>
+{% endblock scripts %}

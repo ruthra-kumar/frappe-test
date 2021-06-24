@@ -1,0 +1,42 @@
+[
+{
+"memberid": "101",
+"first_name": "Mary",
+"last_name": "Smith",
+"emailid": "mary.smith@sakilacustomer.org",
+"created_on": "2006-02-14",
+"amount_due": 0
+},
+{
+"memberid": "102",
+"first_name": "Patricia",
+"last_name": "Johnson",
+"emailid": "patricia.johnson@sakilacustomer.org",
+"created_on": "2006-02-14",
+"amount_due": 0
+},
+{
+"memberid": "103",
+"first_name": "Linda",
+"last_name": "Williams",
+"emailid": "linda.williams@sakilacustomer.org",
+"created_on": "2006-02-14",
+"amount_due": 0
+},
+{
+"memberid": "104",
+"first_name": "Barbara",
+"last_name": "Jones",
+"emailid": "barbara.jones@sakilacustomer.org",
+"created_on": "2006-02-14",
+"amount_due": 0
+},
+{
+"memberid": "105",
+"first_name": "Elizabeth",
+"last_name": "Brown",
+"emailid": "elizabeth.brown@sakilacustomer.org",
+"created_on": "2006-02-14",
+"amount_due": 0
+}
+]

@@ -1,0 +1,190 @@
+html {
+  font-family: sans-serif;
+}
+
+#header {
+    margin: 7px 0px 17px;
+    padding: 7px 0px 7px;
+    font-size: 1.4em;
+    border-top: 0;
+    border-bottom: 1px solid #ccc;
+}
+
+body {
+  font-family: verdana;
+  font-size: 14px;
+  color: #444;
+  margin:0px 16px 0px 16px;
+}
+
+.section {
+    padding: 10px;
+    height: 100px;
+    width: 100px;
+    border: 2px solid #42b983;
+    border-radius: 10px;
+    float:left;
+    margin: 10px;
+    font-size: 0.8em;
+}
+
+.vuetable {
+  border: 1px solid #42b983;
+  border-radius: 3px;
+  background-color: #fff;
+  padding: 3px;
+  min-width: 100%;
+}
+
+.vuetable-th {
+  background-color: #42b983;
+  color: rgba(255, 255, 255);
+  cursor: pointer;
+}
+
+.vuetable-td {
+    background-color: #f9f9f9;
+    font-size: 0.8em;
+}
+
+.table-input {
+    border: 0px;
+    box-sizing: border-box;
+    background-color: #fff;
+    /* min-width: 150px; */
+    /* max-width: 150px;     */
+    min-width: auto;
+    max-width: auto;    
+}
+
+.vuetable-th, .vuetable-td {
+    text-align: center;
+    vertical-align: middle;
+    /* min-width: 150px; */
+    /* max-width: 150px;     */
+    min-width: auto;
+    max-width: auto;
+}
+
+.vuetable-th.active {
+  color: #fff;
+}
+
+a {
+    display: block;
+    text-decoration: none;
+}
+
+#navbar {
+    background: #eee;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 14% 86%;
+    grid-template-rows: minmax(356px,auto);
+}
+
+.item-navbar {
+    display: grid;
+    border-radius: 5px;
+    height: auto;
+
+    grid-column-start:1;
+    grid-column-end:2;
+    grid-row-start:1;
+    grid-row-end:1;
+
+    grid-template-columns: auto 0.8em;
+    grid-template-rows: subgrid;
+}
+
+.subitem-navbar-content {
+    font-size: smaller;
+    padding: 10px 5px 0 10px;
+    
+    grid-column-start:1;
+    grid-column-end:2;
+}
+
+.subitem-navbar-btn {
+    grid-column-start:2;
+    grid-column-end:3;
+    align-self: stretch;
+    background: #CCCCCC;
+    border-radius: 0px 5px 5px 0px;
+    font-size: 1em;
+}
+
+.subitem-navbar-btn:hover {
+    background: #AAAAAA;
+}
+#navbar_btn_text {
+    display: block;
+    position: relative;
+}
+
+.item-document {
+    grid-column-start:2;
+    grid-column-end:3;
+    grid-row-start:1;
+    grid-row-end:1;
+    overflow-x: auto;
+    padding: 10px 5px 0 10px;
+}
+ 
+.table-menu {
+    display: grid;
+    grid-template-columns: 6.25% 6.25% 6.25% 50% 6.25% 6.25% 6.25% 6.25%;
+    grid-template-rows: auto;
+
+    justify-items:center;
+    align-items:center;
+}
+
+.table-operation {
+    display: grid;
+    justify-self:stretch;
+    align-self: stretch;
+    padding: 3px;
+}
+
+.table-operation input{
+    border: 0px;
+}
+
+#form {
+    border: 1px solid #42b983;
+    border-radius: 3px;
+    margin: 0px 0px 10px 0px;
+    max-width: 500px;
+}
+#form-title {
+    font-size: larger;
+    color: #fff;
+    height: 20px;
+    text-align: left;
+    background: #42b983;
+    padding: 0px 20px 0px 20px;
+}
+#form-content {
+    display: grid;
+    grid-template-columns: 100px 300px;
+    grid-template-rows: repeat(6, 30px);
+    column-gap: 15px;
+    row-gap: 5px;
+    padding: 15px;
+}
+
+.grid-issuelist {
+    padding: 3px;
+
+    display: grid;
+    grid-template-columns: 400px 400px;
+    grid-template-rows: auto auto auto;
+}
+
+.grid-issuelist-item {
+    display: grid;
+    justify-self: stretch;
+}

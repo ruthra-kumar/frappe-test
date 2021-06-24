@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}} " />
+    <title>{% block title %}{% endblock title%}</title>
+
+    {% raw %}
+    <script type="text/x-template" id="vuegrid-template">
+
+    <div>
+      <table class="vuetable">
+	<thead>
+	  <!-- Headers -->
+	  <!-- First section - Table operations -->
+	  <tr>
+	    <th class="vuetable-th"> <input id="selectall" type="checkbox" v-model="selectAll" /></th>
+	    <th class="vuetable-th" :colspan="headerSpan_Length">
+	      <div class="table-menu">
+		<div title="Edit mode" class="table-operation">
+                  <label for="editBtn">Edit</label>
+                  <input id="editBtn" type="checkbox" v-model="editTable" :disabled="options.only_display"/>
+		</div>
+		<div title="Add New Record" class="table-operation">
+		  <input type="button" value="Add" :disabled="!options.can_take_input" @click="$emit('add_row')"/>
+		</div>
+		<div class="table-operation">
+		  <input title="Delete selected records" id="deleteOpr" type="button" value="Delete" v-bind:disabled="!deleteBtn" @click="deleteSelected"/></div>
+		<div class="table-operation">
+		  <input id="filterkey" type="text" v-model="filterKey" placeholder="Filter"/>
+		</div>
+		<div title="Current Page" class="table-operation">
+		  {{pageFrom}} - {{pageTo}} of {{ filteredRecords.length }}</div>
+		<div class="table_operation">
+		  <input title="Previous Page" type="button" value="<" v-bind:disabled="!pages.includes(currentPage-1)" @click="currentPage = currentPage-1"/>
+		</div>
+		<div class="table_operation">
+		  <input title="Next Page" type="button" value=">" v-bind:disabled="!pages.includes(currentPage+1)" @click="currentPage = currentPage+1"/>
+		</div>
+		<div class="table-operation">
+		  <select title="Records per page" v-model="pageSize">
+		    <option v-for="size in pageSizes" v-bind:value="size">
+		      {{size}}
+		    </option>
+		  </select>
+		</div>
+	      </div>
+	    </th>
+	  </tr>
+	  <!-- Second section - Data -->
+	  <tr>
+	    <!-- <th scope="col">#</th> -->
+	    <template v-for="(col, col_index) in columns">
+	      <th class="vuetable-th" scope="col" v-if="col['sortable']" @click="$emit('sort', col)">
+		{{col.header}}
+		<span v-if="sortOrder[col.name] == 0">
+		  ↑↓
+		</span>
+		<span v-else>
+		  {{sortOrder[col.name] > 0 ? '↑' : '↓'}}
+		</span>
+	      </th>
+	      <th class="vuetable-th" v-else scope="col">
+		{{col.header}}
+	      </th>
+	    </template>
+	  </tr>
+	</thead>
+
+	<!-- Table Data  -->      
+	<tbody>
+	  <!-- Edit Mode -->
+	  <template v-if="currentPageRecords.length">
+	    <template v-if="editTable">
+	      <tr v-for="(row, row_index) in currentPageRecords" :key="row_index">
+		<td class="vuetable-td" v-for="(col, col_index) in columns" :key="col_index">
+    <input class="table-input" :type="col.type" v-model="row[col.name]" :disabled="!col.modifiable" @change="$emit('update_row',row)"/>
+		</td>
+	      </tr>
+	    </template>
+       	    <template v-else>
+              <!-- Display mode -->
+	      <tr v-for="(row, row_index) in currentPageRecords" :key="row_index">
+		<td class="vuetable-td" v-for="(col, col_index) in columns" v-if="col['internal_use']" :key="col_index">
+		  <input :type="col.type" v-model="row[col.name]" @change="$emit('update_row',row)"/>
+		</td>
+    		<td class="vuetable-td" v-for="(col, col_index) in columns" v-if="!col['internal_use']":key="col_index">
+    {{row, col |  handleCheckBox(row, col)}}
+		</td>
+	      </tr>
+	    </template>
+	  </template>
+	</tbody>
+      </table>
+    </div>
+    </script>
+    {% endraw %}
+    {% endblock %}
+</head>
+<body>
+  {% block header %}
+  <div id="header"><a href="index.html">BookWorm - Library Management System</a></div>
+  {% endblock header %}
+
+  {% block document %}
+  <div id="document" class="grid">
+
+    {% block navbar %}
+    <div id="navbar" class="item-navbar">
+      <div ref="navbar_content" class="subitem-navbar-content" v-on:focus="edit_field()">
+	<p>
+	  {% for section in content['navbar_sections'] %}
+
+	  <h4>{{section}}</h4>
+	  {% for link in content['navbar_sections'][section] %}
+	  <a href="{{link['url']}}">{{ link['title'] }}</a>
+	  {% endfor %}
+	  {% endfor %}
+	</p>
+      </div>
+      <div id="navbar_btn" ref="navbar_btn" class="subitem-navbar-btn" v-on:click="handle_expand_btn($event)">
+	<span id="navbar_btn_text" ref="navbar_btn_text">«</span>
+      </div>
+    </div>
+    {% endblock navbar %}
+
+    <div id="main" class="item-document">
+      {% block message %}
+      {% raw %}
+      <section>
+	<div id="msg_box" class="container">
+	  <ul>
+	    <li v-for="msg in messages">
+	      {{ msg }}
+	    </li>
+	  </ul>
+	</div>
+      </section>
+      {% endraw %}
+      {% endblock message %}
+      
+      {% block content %} {% endblock content %}
+    </div>
+  </div>
+  {% endblock document %}
+
+  {% block scripts %}
+  <script src="{{ url_for('static', filename='axios.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vue.js') }}"></script>
+  <script src="{{ url_for('static', filename='navbar.js') }}"></script>  
+  <script src="{{ url_for('static', filename='vuetable.js') }}"></script>
+  {% endblock scripts %}
+</body>
+</html>

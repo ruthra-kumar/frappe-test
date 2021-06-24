@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %} {{ content['title'] }} {% endblock %}
+{% block header %} {{ super() }}  {% endblock header %}
+{% block document %} {{ super() }} {% endblock document %}
+{% block content %} {% raw %}
+
+<section id="getdata">
+  <input type="button" v-on:click="getData" value="Refresh"/>
+</section>
+
+<section id='customers'>
+  Highest Paying Customers
+  <vuegrid
+    :columns="columns"
+    :table_data="table_records"
+    :options="table_options"
+    :sort-order="sortOrder"
+    @sort="sortBy"
+    @delete_operation="deleteOperation"
+    @update_row="updateRow"
+    @add_row="addRow">
+  </vuegrid>
+</section>
+{% endraw %}
+{% endblock content%}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='customers.js') }}"></script>
+{% endblock scripts %}

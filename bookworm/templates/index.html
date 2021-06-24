@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %} {{ content['title'] }} {% endblock %}
+{% block header %} {{ super() }}  {% endblock header %}
+{% block document %} {{ super() }} {% endblock document %}
+{% block content %}
+
+<h3> Welcome to BookWorm - A Simple Library Management System</h3>
+{% for section in content['navbar_sections'] %}
+<div class="section">
+  <h4>{{section}}</h4>
+  {% for link in content['navbar_sections'][section] %}
+  <a href="{{link['url']}}">{{ link['title'] }}</a>
+  {% endfor %}
+</div>
+{% endfor %}
+
+{% endblock content %}
+{% block scripts %} {{ super() }}  {% endblock scripts %}
+

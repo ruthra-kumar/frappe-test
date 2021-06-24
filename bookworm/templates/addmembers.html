@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %} {{ content['title'] }} {% endblock %}
+{% block header %} {{ super() }}  {% endblock header %}
+{% block document %} {{ super() }} {% endblock document %}
+{% block content %} {% raw %}
+<section>
+  <div id="addmembers">
+    <input type="button" value="Save" v-on:click="savedb"/>
+    <form id="form">
+      <div id="form-title">Members - Add</div>
+      <div id="form-content">
+	<label for="memberid">MemberID:</label>
+	<input id="memberid" type="number" v-model="newEntry.memberid" min="1"/>
+	<label for="first_name">First Name:</label>
+	<input id="first_name" type="text" v-model="newEntry.first_name" />
+	<label for="last_name">Last Name:</label>
+	<input id="last_name" type="text" v-model="newEntry.last_name" />
+	<label for="emailid">Email ID:</label>
+	<input id="emailid" type="text" v-model="newEntry.emailid" />
+	<label for="created_on">Created On:</label>
+	<input id="created_on" type="date" v-model="newEntry.created_on" />
+	<br>
+	<input type="Submit" value="Add" v-on:click.prevent="addEntry"/>
+      </div>
+    </form>
+
+  </div>
+</section>
+
+<section id='tableapp1'>
+  <vuegrid
+    :columns="columns"
+    :table_data="table_records"
+    :options="table_options"
+    :sort-order="sortOrder"
+    @sort="sortBy"
+    @delete_operation="deleteOperation"
+    @update_row="updateRow"
+    @add_row="addRow">
+  </vuegrid>
+</section>
+
+{% endraw %}
+{% endblock content%}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='addmembers.js') }}"></script>
+{% endblock scripts %}

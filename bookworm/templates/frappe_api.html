@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %} {{ content['title'] }} {% endblock %}
+{% block header %} {{ super() }}  {% endblock header %}
+{% block document %} {{ super() }} {% endblock document %}
+{% block content %} {% raw %}
+<section>
+  <div id="frappe-library">
+    <input type="button" value="Save to DB" v-on:click.prevent="save_to_db"/>
+    <form id="form">
+      <div id="form-title">Search Frappe Library</div>
+      <div id="form-content">
+	<label for="title">Title:</label>
+	<input id="title" type="text" v-model="param_title" />
+	<label for="author">Authors:</label>
+	<input id="author" type="text" v-model="param_author" />
+	<label for="isbn">ISBN:</label>
+	<input id="isbn" type="text" v-model="param_isbn" />
+	<label for="publisher">Publisher:</label>
+	<input id="publisher" type="text" v-model="param_publisher" />
+	<label for="count">No of books:</label>
+	<input id="count" type="number" v-model="param_book_count" max="4000" min="20"/>
+	<br>
+	<input type="Submit" value="Search" v-on:click.prevent="query_frappe_api"/>
+      </div>
+    </form>
+  </div>
+</section>
+
+<section id='tableapp1'>
+  <vuegrid
+    :columns="columns"
+    :table_data="table_records"
+    :options="table_options"
+    :sort-order="sortOrder"
+    @sort="sortBy"
+    @delete_operation="deleteOperation"
+    @update_row="updateRow"
+    @add_row="addRow">
+  </vuegrid>
+</section>
+{% endraw %}
+{% endblock content%}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='frappe_api.js') }}"></script>
+{% endblock scripts %}
