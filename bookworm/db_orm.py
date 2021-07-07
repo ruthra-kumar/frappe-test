@@ -132,6 +132,7 @@ def init_book_stock(app):
     session.close()
     
 def init_db(app):
+    Base.metadata.drop_all(app.config['DB_ENGINE'])
     Base.metadata.create_all(app.config['DB_ENGINE'])
     app.config.from_mapping(
         DB_SESSION = app.config['DB_SESSIONMAKER']()
