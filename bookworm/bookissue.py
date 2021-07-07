@@ -55,7 +55,7 @@ def get_issued_books():
               'member': transaction.member.dict(),
               'book': transaction.book.dict(),
               'issued_date': transaction.issued_date.strftime('%Y-%m-%d')})
-
+    session.close()
     return jsonify(return_obj)
 
 @api.route('/getUnpaid', methods=['GET'])
@@ -73,7 +73,7 @@ def get_unpaid_returns():
                   'returned_date': None if transaction.returned_date == None else transaction.returned_date.strftime("%Y-%m-%d"),
                   'rent_fee': transaction.charge.amountdue,
                  })
-
+    session.close()
     return jsonify(return_obj)
 
 def book_issue_logic(member, book):
