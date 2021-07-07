@@ -54,7 +54,10 @@ def get_issued_books():
             { 'transactionid': transaction.transactionid,
               'member': transaction.member.dict(),
               'book': transaction.book.dict(),
-              'issued_date': transaction.issued_date.strftime('%Y-%m-%d')})
+              'paid': transaction.charge.paid,
+              'issued_date': transaction.issued_date.strftime('%Y-%m-%d'),
+              'returned_date': '' if transaction.returned_date == None else transaction.returned_date.strftime('%Y-%m-%d')
+             })
     session.close()
     return jsonify(return_obj)
 
@@ -236,9 +239,7 @@ def issue_return():
                                 transaction.charge.amountdue = rent_fee
                                 
                                 if 'paid' in ret_book.keys():
-                                    transaction.charge.paid = True
-                                else:
-                                    transaction.charge.paid = False
+                                    transaction.charge.paid = ret_book['paid']
 
                                 session.add(transaction)
                             else:
