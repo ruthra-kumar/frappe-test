@@ -7,6 +7,7 @@ from flask import (
 )
 
 from bookworm.lms import api
+from bookworm.lms import add_return_message
 from bookworm.db_orm import *
 
 @api.route('/listbooks', methods=['GET'])    
@@ -34,11 +35,7 @@ def addbooks():
                 books_found = session.query(Book).filter(Book.bookid.in_(bookids))
                 if books_found.all() != []:
                     for x in books_found:
-                        return_msg['message'].append({
-                            'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                            'type': 'Error',
-                            'content': 'Bookid {} already exists'.format(x.bookid)
-                        })
+                        add_return_message(return_msg['message'], 'Bookid {} already exists'.format(x.bookid) ,'Error')
                 else:
 
                     # Add new books to DB session
@@ -64,14 +61,14 @@ def addbooks():
                     try:
                         session.commit()
                         current_app.logger.debug('Books added')
-                        return_msg['message'].append('Books Added')
+                        add_return_message(return_msg['message'], 'Books Added', 'Success')
                     except Exception as commit_exception:
                         current_app.logger.debug(commit_exception.args)
-                        return_msg['message'].append(commit_exception.args)
+                        add_return_message(return_msg['message'],commit_exception.args, 'Error')
                         session.rollback()
         except Exception as unknown:
             current_app.logger.debug(type(unknown),unknown.args)
-            return_msg['message'].append(unknown.args)
+            add_return_message(return_msg['message'],unknown.args, 'Error')
 
         session.close()
         return jsonify(return_msg)
@@ -102,7 +99,7 @@ def updatebooks():
                     has_holders = False
                     for x in del_books:
                         if len(x.active_holders) > 0:
-                            return_msg['message'].append('{} has holders'.format(x.bookid))
+                            add_return_message(return_msg['message'], '{} has holders'.format(x.bookid), 'Error')
                             has_holders = True
 
 
@@ -110,10 +107,10 @@ def updatebooks():
                         list(map(lambda book: session.delete(book), del_books))
                         try:
                             session.commit()
-                            return_msg['message'].append('Books Deleted')
+                            add_return_message(return_msg['message'], 'Books Deleted', 'Sucess')
                         except Exception as commit_exception:
                             current_app.logger.debug(commit_exception.args)
-                            return_msg['message'].append( commit_exception.arg )
+                            add_return_message(return_msg['message'], commit_exception.arg, 'Error')
                             session.rollback()
 
             if 'modified_books' in content.keys():
@@ -138,7 +135,7 @@ def updatebooks():
                                     book.stock.total_quantity = new_quantity
                                     book.stock.available_quantity = book.stock.total_quantity - in_use
                             else:
-                                return_msg['message'].append('Bookid: {} - Quantity cannot be lower than {}'.format(book.bookid, in_use))
+                                add_return_message(return_msg['message'],'Bookid: {} - Quantity cannot be lower than {}'.format(book.bookid, in_use), 'Error')
                                 break
 
                             book.title = updated_book['title']
@@ -147,10 +144,6 @@ def updatebooks():
                             book.publication_date = datetime.datetime.strptime(updated_book['publication_date'], "%Y-%m-%d")
                             book.publisher = updated_book['publisher']
 
-                                
-                                
-                            # book.stock.available_quantity = updated_book['quantity']
-                            # book.stock.total_quantity = updated_book['quantity']
 
                             session.add(book)
                             session.add(book.stock)
@@ -158,14 +151,14 @@ def updatebooks():
                             try:
                                 session.commit()
                                 current_app.logger.debug('Books Updated')
-                                return_msg['message'].append('Books Updated')
+                                add_return_message(return_msg['message'], 'Books Updated', 'Success')
                             except Exception as commit_exception:
                                 current_app.logger.debug(commit_exception.args)
-                                return_msg['message'].append(commit_exception.args)
+                                add_return_message(return_msg['message'],commit_exception.args, 'Error')
                                 session.rollback()
         except Exception as unknown:
             current_app.logger.debug(type(unknown),unknown.args)
-            return_msg['message'].append(unknown.args)
+            add_return_messag(return_msg['message'],unknown.args, 'Error')
             
         session.close()
         return jsonify(return_msg)

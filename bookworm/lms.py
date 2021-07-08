@@ -1,3 +1,5 @@
+import datetime
+
 from flask import (
     Blueprint, render_template, url_for
 )
@@ -5,6 +7,18 @@ from flask import (
 api = Blueprint('lms', __name__, url_prefix='/lms')
 app = Blueprint('app', __name__)
 
+def add_return_message(msg_list, new_msg, msg_type):
+    type = 'Success'
+    if msg_type == None:
+        type = msg_type
+
+    msg_list.append({
+        'timestamp': datetime.datetime.now().strftime('%Y-%m-%s %H:%M:%S'),
+        'type': type,
+        'content': new_msg
+    })
+    
+    
 def build_navbar_content():
     sections = {
         'Books': [

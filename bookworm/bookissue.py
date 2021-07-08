@@ -5,6 +5,7 @@ from flask import(
 )
 
 from bookworm.lms import api
+from bookworm.lms import add_return_message
 from bookworm.db_orm import *
 
 def build_shallow_book_dict(book):
@@ -173,17 +174,17 @@ def issue_book():
                     session.add(sel_book)
                     try:
                         session.commit()
-                        return_msg['message'].append('Book has been issued')
+                        add_return_message(return_msg['message'], 'Book has been issued', 'Success')
                     except Exception as commit_exception:
-                        return_msg['message'].append(commit_exception.args)
+                        add_return_message(return_msg['message'], commit_exception.args, 'Error')
                         session.rollback()
                 else:
                     return_msg['message'] = decision['err_msgs']
             else:
-                return_msg['message'].append('Cirtical parameters missing')
+                add_return_message(return_msg['message'], 'Cirtical parameters missing', 'Error')
             session.close()
         except Exception as unknown_exception:
-            return_msg['message'].append(unknown_exception.args)
+            add_return_message(return_msg['message'], unknown_exception.args, 'Error')
 
         ret_form_data = build_issueform_data()
         return_msg['books'] = ret_form_data['books']
@@ -243,22 +244,22 @@ def issue_return():
 
                                 session.add(transaction)
                             else:
-                                return_msg['message'].append("Bookid:%d, Memberid: %d is missing returned date" % (ret_book['bookid'] ,ret_book['memberid']))
+                                add_return_message(return_msg['message'], "Bookid:%d, Memberid: %d is missing returned date" % (ret_book['bookid'] ,ret_book['memberid']), 'Error')
                         
                     try:
                         session.commit()
-                        return_msg['message'].append('Book returned')
+                        add_return_message(return_msg['message'], 'Book returned', 'Success')
                     except Exception as commit_exception:
-                        return_msg['message'].append(commit_exception.args)
+                        add_return_message(return_msg['message'], commit_exception.args, 'Error')
                         session.rollback()
                 else:
-                    return_msg['message'].append('No books were selected')
+                    add_return_message(return_msg['message'], 'No books were selected', 'Error')
                     session.close()
             else:
-                return_msg['message'].append('Cirtical parameters missing')
+                add_return_message(return_msg['message'], 'Cirtical parameters missing', 'Error')
             session.close()
         except Exception as unknown_exception:
-            return_msg['message'].append(unknown_exception.args)
+            add_return_message(return_msg['message'], unknown_exception.args, 'Error')
 
         ret_form_data = build_issueform_data()
         return_msg['books'] = ret_form_data['books']
@@ -302,18 +303,18 @@ def get_transaction_debt():
 
                     try:
                         session.commit()
-                        return_msg['message'].append('Debt Paid')
+                        add_return_message(return_msg['message'], 'Debt Paid', 'Success')
                     except Exception as commit_exception:
-                        return_msg['message'].append(commit_exception.args)
+                        add_return_message(return_msg['message'], commit_exception.args, 'Error')
                         session.rollback()
                 else:
-                    return_msg['message'].append('No transactions were selected')
+                    add_return_message(return_msg['message'], 'No transactions were selected', 'Error')
                     session.close()
             else:
-                return_msg['message'].append('Cirtical parameters missing')
+                add_return_message(return_msg['message'], 'Cirtical parameters missing', 'Error')
             session.close()
         except Exception as unknown_exception:
-            return_msg['message'].append(unknown_exception.args)
+            add_return_message(return_msg['message'], unknown_exception.args, 'Error')
 
         ret_form_data = build_issueform_data()
         return_msg['books'] = ret_form_data['books']

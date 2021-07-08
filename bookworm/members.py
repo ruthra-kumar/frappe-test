@@ -6,6 +6,7 @@ from flask import (
 )
 
 from bookworm.lms import api
+from bookworm.lms import add_return_message
 from bookworm.db_orm import *
 
 @api.route('/listmembers', methods=['GET'])    
@@ -34,7 +35,7 @@ def addmembers():
                 members_found = session.query(Member).filter(Member.memberid.in_(memberids))
                 if members_found.all() != []:
                     for x in members_found:
-                        return_msg['message'].append('Member {} already exists'.format(x.memberid))
+                        add_return_message(return_msg['message'], 'Member {} already exists'.format(x.memberid), 'Error')
                 else:
 
                     # Add new members to DB
@@ -49,14 +50,14 @@ def addmembers():
 
                         try:
                             session.commit()
-                            return_msg['message'].append('Members Added')
+                            add_return_message(return_msg['message'], 'Members Added', 'Success')
                             current_app.logger.info('Members Added')
                         except Exception as e:
                             session.rollback()
-                            return_msg['message'].append(e.args)
+                            add_return_message(return_msg['message'], e.args, 'Error')
                             current_app.logger.error(e.args)
             else:
-                return_msg['message'].append('New Members data missing')
+                add_return_message(return_msg['message'], 'New Members data missing', 'Error')
                 current_app.logger.debug('New Members data missing')
 
         # Payload issues
@@ -89,10 +90,10 @@ def updatemembers():
                     list(map(lambda mem: session.delete(mem), del_members))
                     try:
                         session.commit()
-                        return_msg['message'].append('Members Deleted')
+                        add_return_message(return_msg['message'], 'Members Deleted', 'Success')
                     except Exception as commit_exception:
                         current_app.logger.debug(commit_exception.args)
-                        return_msg['message'].append( commit_exception.arg )
+                        add_return_message(return_msg['message'],  commit_exception.arg , 'Error')
                         session.rollback()
 
             if 'modified_members' in content.keys():
@@ -113,15 +114,15 @@ def updatemembers():
                     try:
                         session.commit()
                         current_app.logger.debug('Members Updated')
-                        return_msg['message'].append('Members Updated')
+                        add_return_message(return_msg['message'], 'Members Updated', 'Success')
                     except Exception as commit_exception:
                         current_app.logger.debug(commit_exception.args)
-                        return_msg['message'].append(commit_exception.args)
+                        add_return_message(return_msg['message'], commit_exception.args, 'Error')
                         session.rollback()
 
         except Exception as unknown:
             current_app.logger.debug(type(unknown),unknown.args)
-            return_msg['message'].append(unknown.args)
+            add_return_message(return_msg['message'], unknown.args, 'Error')
             
         session.close()
         return jsonify(return_msg)
