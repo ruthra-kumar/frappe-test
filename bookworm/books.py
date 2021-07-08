@@ -128,15 +128,12 @@ def updatebooks():
                             # Make sure that new quantity is not lower than no of books issued
                             in_use = book.stock.total_quantity - book.stock.available_quantity
                             new_quantity = int(updated_book['quantity'])
-                            if new_quantity >= in_use:
-                                if book.stock.total_quantity >= new_quantity:
-                                    book.stock.total_quantity -= book.stock.total_quantity - new_quantity
-                                    book.stock.available_quantity = book.stock.total_quantity - in_use
-                                else:
-                                    book.stock.total_quantity = new_quantity
-                                    book.stock.available_quantity = book.stock.total_quantity - in_use
+                            if new_quantity >= 0:
+                                    book.stock.available_quantity = new_quantity
+                                    book.stock.total_quantity = book.stock.available_quantity + in_use
                             else:
-                                add_return_message(return_msg['message'],'Bookid: {} - Quantity cannot be lower than {}'.format(book.bookid, in_use), 'Error')
+                                add_return_message(return_msg['message'],'Bookid: {} - Quantity cannot be lower than 0'.format(updated_book['bookid']), 'Error')
+                                return_msg['update_opr'] = 'Error'
                                 break
 
                             book.title = updated_book['title']
@@ -153,13 +150,15 @@ def updatebooks():
                                 session.commit()
                                 current_app.logger.debug('Books Updated')
                                 add_return_message(return_msg['message'], 'Books Updated', 'Success')
+                                return_msg['update_opr'] = 'Success'
                             except Exception as commit_exception:
                                 current_app.logger.debug(commit_exception.args)
                                 add_return_message(return_msg['message'],commit_exception.args, 'Error')
+                                return_msg['update_opr'] = 'Error'
                                 session.rollback()
         except Exception as unknown:
             current_app.logger.debug(type(unknown),unknown.args)
-            add_return_messag(return_msg['message'],unknown.args, 'Error')
+            add_return_message(return_msg['message'],unknown.args, 'Error')
             
         session.close()
         return jsonify(return_msg)

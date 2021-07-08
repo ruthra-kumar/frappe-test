@@ -83,6 +83,8 @@ var book_return = new Vue({
 	    return tab_unpaid_books;
 	},	    
 	getAllTransactions: function(){
+	    msg.add_messages([])
+
 	    axios
 		.get('/lms/getIssued')
 		.then(response => {

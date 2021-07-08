@@ -354,6 +354,7 @@ function vuetable(rows, cols, options){
 		return this.deleted_records;
 	    },
 	    resetModificationTracker: function(){
+		this.modified_records.clear();
 	    },
 	    resetDeletionTracker: function(){
 		this.deleted_records.splice(0, this.deleted_records.length);

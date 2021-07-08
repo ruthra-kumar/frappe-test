@@ -86,15 +86,33 @@ def updatemembers():
                 list(map(lambda x: memberids.append(x['memberid']), content['deleted_members']))
 
                 if memberids:
+                    perform_deletion = True
                     del_members = session.query(Member).filter(Member.memberid.in_(memberids))
-                    list(map(lambda mem: session.delete(mem), del_members))
-                    try:
-                        session.commit()
-                        add_return_message(return_msg['message'], 'Members Deleted', 'Success')
-                    except Exception as commit_exception:
-                        current_app.logger.debug(commit_exception.args)
-                        add_return_message(return_msg['message'],  commit_exception.arg , 'Error')
-                        session.rollback()
+                    
+                    # make sure member has no active book holdings and outstanding debt
+                    for x in del_members:
+                        if x.holding_books != []:
+                            add_return_message(return_msg['message'], 'Member: {}  has unreturned books.'.format(x.memberid), 'Error')
+                            return_msg['deletion_opr'] = 'Error'
+                            perform_deletion = False
+
+                        if x.dict()['outstanding_debt'] > 0:
+                            add_return_message(return_msg['message'], 'Member: {}  has Outstanding Debt.'.format(x.memberid), 'Error')
+                            return_msg['deletion_opr'] = 'Error'
+                            perform_deletion = False
+                    
+                    
+                    if perform_deletion:
+                        list(map(lambda mem: session.delete(mem), del_members))
+                        try:
+                            session.commit()
+                            add_return_message(return_msg['message'], 'Members Deleted', 'Success')
+                            return_msg['deletion_opr'] = 'Success'
+                        except Exception as commit_exception:
+                            current_app.logger.debug(commit_exception.args)
+                            add_return_message(return_msg['message'],  commit_exception.arg , 'Error')
+                            return_msg['deletion_opr'] = 'Success'
+                            session.rollback()
 
             if 'modified_members' in content.keys():
                 memberids = []
@@ -115,9 +133,11 @@ def updatemembers():
                         session.commit()
                         current_app.logger.debug('Members Updated')
                         add_return_message(return_msg['message'], 'Members Updated', 'Success')
+                        return_msg['update_opr'] = 'Success'
                     except Exception as commit_exception:
                         current_app.logger.debug(commit_exception.args)
                         add_return_message(return_msg['message'], commit_exception.args, 'Error')
+                        return_msg['update_opr'] = 'Error'
                         session.rollback()
 
         except Exception as unknown:

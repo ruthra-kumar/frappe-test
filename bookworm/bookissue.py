@@ -239,6 +239,9 @@ def issue_return():
                                 if 'paid' in ret_book.keys():
                                     transaction.charge.paid = ret_book['paid']
 
+                                if rent_fee == 0:
+                                    transaction.charge.paid = True
+
                                 session.add(transaction)
                             else:
                                 add_return_message(return_msg['message'], "Bookid:%d, Memberid: %d is missing returned date" % (ret_book['bookid'] ,ret_book['memberid']), 'Error')

@@ -37,6 +37,11 @@ var books_db = new Vue({
 		    if(response.data['deletion_opr'] == 'Success'){
 			tab1.resetDeletionTracker();
 		    }
+
+		    if(response.data['update_opr'] == 'Success'){
+			tab1.resetModificationTracker();
+		    }
+		    
 		})
 	}
     },
