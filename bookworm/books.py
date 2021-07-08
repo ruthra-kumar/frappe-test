@@ -152,7 +152,8 @@ def updatebooks():
             
         session.close()
         return jsonify(return_msg)
-    
+
+# Get top 5 most popular books
 @api.route('/popularbooks', methods=['GET'])
 def get_popular_books():
     session = current_app.config['DB_SESSIONMAKER']()

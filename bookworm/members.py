@@ -114,6 +114,7 @@ def updatemembers():
         session.close()
         return jsonify(return_msg)
                     
+# Get top 3 highest paying customers
 @api.route('/getCustomers', methods=['GET'])    
 def get_customers():
     session = current_app.config['DB_SESSIONMAKER']()
@@ -131,6 +132,6 @@ def get_customers():
             'last_name': x.last_name,
             'paid': total_amount_paid
         })
-
+    customers.sort(key=lambda member: member['paid'], reverse=True)
     session.close()
     return jsonify({'customers': customers[0:3]})
