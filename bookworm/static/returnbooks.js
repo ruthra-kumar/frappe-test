@@ -12,7 +12,7 @@ var columns = [
 	var returned_on = new Date(record.returned_date);
 	var holding_period = returned_on.getTime() - took_on.getTime();
 	days = (holding_period/1000/60/60/24);
-	record.rent_fee = ((days > 30) ? (days - 30) * 1: 0);
+	record.rent_fee = ((days > 30) ? ((days - 30) * 1 > 100 ? 100 : (days - 30) * 1 ): 0);
     }}},
     {name: 'rent_fee', type: 'number',header: 'Rent Fee', sortable: true, required: true, modifiable:false},
     {name: 'paid', type: 'checkbox',header: 'Paid?', sortable: true, required: true, modifiable:true},
