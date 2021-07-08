@@ -362,6 +362,19 @@ var msg = new Vue({
     el: '#msg_box',
     data: {
 	messages: [],
+	old_messages: [],
     },
+    methods: {
+	add_messages: function(msgs){
+	    old_msgs = this.old_messages;
+	    displayed_msgs = this.messages;
+
+	    // Archive displayed messages
+	    old_msgs.splice(old_msgs.length,0, ...displayed_msgs);
+
+	    //Update displayed messages
+	    displayed_msgs.splice(0, displayed_msgs.length, ...msgs);
+	}
+    }
 })
 

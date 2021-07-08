@@ -25,34 +25,47 @@ def addbooks():
             content = request.get_json()
             return_msg  ={ 'message': []}
 
+            # Check if books are there in database
             if 'newbooks' in content.keys():
+                bookids = []
                 for x in content['newbooks']:
-                    bk = Book()
-                    if x['bookid']:
-                        bk.bookid = x['bookid']
-                    bk.title = x['title']
-                    bk.authors = x['authors']
-                    bk.isbn13 = x['isbn13']
-                    bk.publication_date = datetime.datetime.strptime(x['publication_date'], "%Y-%m-%d")
-                    bk.publisher = x['publisher']
-                    sk = Stock()
-                    sk.available_quantity = x['quantity']
-                    sk.total_quantity = x['quantity']
-                    bk.stock = sk
+                    bookids.append(x['bookid'])
 
-                    session.add(bk)
-                    session.add(sk)
+                books_found = session.query(Book).filter(Book.bookid.in_(bookids))
+                if books_found.all() != []:
+                    for x in books_found:
+                        return_msg['message'].append('Bookid {} already exists'.format(x.bookid))
+                else:
 
-                try:
-                    session.commit()
-                    current_app.logger.debug('Books added')
-                    return_msg['message'].append('Books Added')
-                except Exception as commit_exception:
-                    current_app.logger.debug(commit_exception.args)
-                    return_msg['message'].append(commit_exception.args)
-                    session.rollback()
+                    # Add new books to DB session
+                    for x in content['newbooks']:
+                        bk = Book()
+
+                        if x['bookid']:
+                            bk.bookid = x['bookid']
+                            
+                        bk.title = x['title']
+                        bk.authors = x['authors']
+                        bk.isbn13 = x['isbn13']
+                        bk.publication_date = datetime.datetime.strptime(x['publication_date'], "%Y-%m-%d")
+                        bk.publisher = x['publisher']
+                        sk = Stock()
+                        sk.available_quantity = x['quantity']
+                        sk.total_quantity = x['quantity']
+                        bk.stock = sk
+                        
+                        session.add(bk)
+                        session.add(sk)
+
+                    try:
+                        session.commit()
+                        current_app.logger.debug('Books added')
+                        return_msg['message'].append('Books Added')
+                    except Exception as commit_exception:
+                        current_app.logger.debug(commit_exception.args)
+                        return_msg['message'].append(commit_exception.args)
+                        session.rollback()
         except Exception as unknown:
-
             current_app.logger.debug(type(unknown),unknown.args)
             return_msg['message'].append(unknown.args)
 

@@ -40,7 +40,7 @@ var addbooks = new Vue({
 		    newbooks:  books
 		})
 		.then(response => {
-		    msg.messages = response.data['message'];
+		    msg.add_messages(response.data['message']);
 		})
 	},
 	addEntry: function(){

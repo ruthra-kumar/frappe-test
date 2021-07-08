@@ -119,7 +119,7 @@ var book_return = new Vue({
 		    returned_books: returned_books
 		})
 		.then(response=>{
-			msg.messages = response.data['message']
+		    msg.add_messages(response.data['message'])
 		})
 	},
 	payDebt: function(){
@@ -138,7 +138,7 @@ var book_return = new Vue({
 		    paid_books: paid_books
 		})
 		.then(response=>{
-		    msg.messages = response.data['message']
+		    msg.add_messages(response.data['message'])
 		})
 	}
     }

@@ -49,9 +49,9 @@ var getdata = new Vue({
 	    var response = await axios.get('/lms/getCustomers')
 	    if(response.status == '200'){
 		this.customers = response.data['customers'],
-		msg.messages = response.data['message']
+		msg.add_messages(response.data['message'])
 	    }else{
-		msg.messages = 'Network error'
+		msg.add_messages(['Network error'])
 	    }
 	    
 	    formatted_data = this.build_customers_report(this.customers);

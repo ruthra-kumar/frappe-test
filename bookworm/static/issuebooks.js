@@ -27,7 +27,7 @@ var issue_form = new Vue({
 	    issueDate = this.issueDate;
 	    
 	    if(selBook == "" || selMember == ""){
-		msg.messages.push('Select Book and Member');
+		msg.add_messages(['Select Book and Member']);
 	    }
 	    else{
 		axios
@@ -37,7 +37,7 @@ var issue_form = new Vue({
 			issueDate: issueDate
 		    })
 		    .then(response => {
-			msg.messages = response.data['message']
+			msg.add_messages(response.data['message']),
 			this.books = response.data['books'],
 			this.members = response.data['members']
 		    })

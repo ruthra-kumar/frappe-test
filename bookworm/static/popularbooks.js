@@ -57,9 +57,9 @@ var getdata = new Vue({
 	    response = await axios.get('/lms/popularbooks')
 	    if(response.status == '200'){
 		this.books = response.data['books'],
-		msg.messages = response.data['message']
+		msg.add_messages(response.data['message'])
 	    }else{
-		msg.messages = 'Network error'
+		msg.add_messages(['Network error'])
 	    }
 	    
 	    formatted_data = this.build_popular_books_report(this.books);

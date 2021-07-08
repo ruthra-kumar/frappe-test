@@ -24,25 +24,37 @@ def addmembers():
             ret = None
             content = request.get_json()
             return_msg = { 'message': [] }
-            
-            if 'newmembers' in content.keys():
-                for x in content['newmembers']:
-                    mem = Member()
-                    mem.memberid = x['memberid']
-                    mem.first_name = x['first_name']
-                    mem.last_name = x['last_name']
-                    mem.emailid = x['emailid']
-                    mem.created_on = datetime.datetime.strptime(x['created_on'], "%Y-%m-%d")
-                    session.add(mem)
 
-                try:
-                    session.commit()
-                    return_msg['message'].append('Members Added')
-                    current_app.logger.info('Members Added')
-                except Exception as e:
-                    session.rollback()
-                    return_msg['message'].append(e.args)
-                    current_app.logger.error(e.args)
+            # Check if members are there in database           
+            if 'newmembers' in content.keys():
+                memberids = []
+                for x in content['newmembers']:
+                    memberids.append(x['memberid'])
+
+                members_found = session.query(Member).filter(Member.memberid.in_(memberids))
+                if members_found.all() != []:
+                    for x in members_found:
+                        return_msg['message'].append('Member {} already exists'.format(x.memberid))
+                else:
+
+                    # Add new members to DB
+                    for x in content['newmembers']:
+                        mem = Member()
+                        mem.memberid = x['memberid']
+                        mem.first_name = x['first_name']
+                        mem.last_name = x['last_name']
+                        mem.emailid = x['emailid']
+                        mem.created_on = datetime.datetime.strptime(x['created_on'], "%Y-%m-%d")
+                        session.add(mem)
+
+                        try:
+                            session.commit()
+                            return_msg['message'].append('Members Added')
+                            current_app.logger.info('Members Added')
+                        except Exception as e:
+                            session.rollback()
+                            return_msg['message'].append(e.args)
+                            current_app.logger.error(e.args)
             else:
                 return_msg['message'].append('New Members data missing')
                 current_app.logger.debug('New Members data missing')

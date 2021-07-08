@@ -32,7 +32,7 @@ var books_db = new Vue({
 		    deleted_books: deleted,
 		})
 		.then(response => {
-		    msg.messages = response.data['message']
+		    msg.add_messages(response.data['message'])
 		})
 	}
     },
