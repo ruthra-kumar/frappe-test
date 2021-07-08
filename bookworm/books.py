@@ -101,13 +101,14 @@ def updatebooks():
                         if len(x.active_holders) > 0:
                             add_return_message(return_msg['message'], '{} has holders'.format(x.bookid), 'Error')
                             has_holders = True
-
+                        return_msg['deletion_opr'] = 'Error'
 
                     if not has_holders:
                         list(map(lambda book: session.delete(book), del_books))
                         try:
                             session.commit()
-                            add_return_message(return_msg['message'], 'Books Deleted', 'Sucess')
+                            add_return_message(return_msg['message'], 'Books Deleted', 'Success')
+                            return_msg['deletion_opr'] = 'Success'
                         except Exception as commit_exception:
                             current_app.logger.debug(commit_exception.args)
                             add_return_message(return_msg['message'], commit_exception.arg, 'Error')
@@ -124,7 +125,7 @@ def updatebooks():
                     for book in edited_books:
                         updated_book = search_books(book, content['modified_books'])
                         if updated_book:
-                            # Make sure that new quantity is not lower that no of books issued
+                            # Make sure that new quantity is not lower than no of books issued
                             in_use = book.stock.total_quantity - book.stock.available_quantity
                             new_quantity = int(updated_book['quantity'])
                             if new_quantity >= in_use:

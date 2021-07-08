@@ -270,7 +270,7 @@ function vuetable(rows, cols, options){
 		var removedRecords = this.deleted_records;
 		var ids = [];
 
-		removedRecords.splice(removedRecords.length, removedRecords.length, ...deletedRecords);
+		removedRecords.splice(removedRecords.length, 0, ...deletedRecords);
 		
 		deletedRecords.forEach(elem => {
 		    var index = records.findIndex(row => {
@@ -352,7 +352,13 @@ function vuetable(rows, cols, options){
 	    },
 	    getDeletedRecords: function(){
 		return this.deleted_records;
-	    }
+	    },
+	    resetModificationTracker: function(){
+	    },
+	    resetDeletionTracker: function(){
+		this.deleted_records.splice(0, this.deleted_records.length);
+	    },
+
 	},
     })
 }

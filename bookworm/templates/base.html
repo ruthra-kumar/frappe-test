@@ -131,7 +131,7 @@
 	<div id="msg_box" class="msg-container">
 	  <ul>
 	    <li class="message" v-for="msg in messages">
-	      {{ msg }}
+	      {{ msg.content }} - {{ msg.timestamp }}
 	    </li>
 	  </ul>
 	</div>

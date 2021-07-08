@@ -33,6 +33,10 @@ var books_db = new Vue({
 		})
 		.then(response => {
 		    msg.add_messages(response.data['message'])
+
+		    if(response.data['deletion_opr'] == 'Success'){
+			tab1.resetDeletionTracker();
+		    }
 		})
 	}
     },

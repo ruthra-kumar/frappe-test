@@ -179,7 +179,8 @@ def issue_book():
                         add_return_message(return_msg['message'], commit_exception.args, 'Error')
                         session.rollback()
                 else:
-                    return_msg['message'] = decision['err_msgs']
+                    for x in decision['err_msgs']:
+                        add_return_message(return_msg['message'], x, 'Error')
             else:
                 add_return_message(return_msg['message'], 'Cirtical parameters missing', 'Error')
             session.close()
@@ -209,12 +210,8 @@ def issue_return():
             if 'returned_books' in content.keys():
                 if not content['returned_books'] == []:
                     for x in content['returned_books']:
-                        # bookids.append(x['bookid']) 
-                        # memberids.append(x['memberid'])
-                        # dates.append(x['issued_date'])
                         transaction_ids.append(x['transactionid'])
 
-                        # issued_books = session.query(BookIssue).filter(BookIssue.bookid.in_(bookids), BookIssue.memberid.in_(memberids))
                         issued_books = session.query(BookIssue).filter(BookIssue.transactionid.in_(transaction_ids))
 
                     # update return date
@@ -235,7 +232,7 @@ def issue_return():
 
                                 # Charge rent
                                 delta = transaction.returned_date - transaction.issued_date
-                                rent_fee = delta.days * 1
+                                rent_fee = 0 if delta.days <= 30 else (delta.days - 30) * 1
                                 rent_fee = 100 if (rent_fee/100) >= 1 else (rent_fee%100)
                                 transaction.charge.amountdue = rent_fee
                                 
