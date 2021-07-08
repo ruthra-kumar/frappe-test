@@ -13,7 +13,7 @@ def add_return_message(msg_list, new_msg, msg_type):
         type = msg_type
 
     msg_list.append({
-        'timestamp': datetime.datetime.now().strftime('%Y-%m-%s %H:%M:%S'),
+        'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         'type': type,
         'content': new_msg
     })
