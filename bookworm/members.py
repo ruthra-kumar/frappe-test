@@ -51,7 +51,7 @@ def addmembers():
                         try:
                             session.commit()
                             add_return_message(return_msg['message'], 'Members Added', 'Success')
-                            current_app.logger.info('Members Added')
+                            # current_app.logger.info('Members Added')
                         except Exception as e:
                             session.rollback()
                             add_return_message(return_msg['message'], e.args, 'Error')

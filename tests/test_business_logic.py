@@ -19,21 +19,25 @@ class test_LibERP(unittest.TestCase):
         self.assertEqual(return_data['greetings'], "Hello World")
 
     def test_02_addbooks(self):
-        response = self.app.post('/lms/addbooks',json={
-            'newbooks': flask.json.loads(open("books.json").read())
-        })
-        return_data = flask.json.loads(response.get_data())
-        self.assertEqual(return_data['message'],'Books Added')
+        with open("tests/books.json") as data:
+            response = self.app.post('/lms/addbooks',json={
+                'newbooks': flask.json.loads(data.read())
+            })
+            return_data = flask.json.loads(response.get_data())
+            self.assertEqual(return_data['message'][0]['content'],'Books Added')
 
     def test_03_addmembers(self):
-        response = self.app.post('/lms/addmembers', json={
-            'newmembers': flask.json.loads(open("members.json").read())
-        })
-        return_data =  flask.json.loads(response.get_data())
-        self.assertEqual(return_data['message'],"Members Added")
+        with open("tests/members.json") as data:
+            response = self.app.post('/lms/addmembers', json={
+                'newmembers': flask.json.loads(data.read())
+            })
+            return_data =  flask.json.loads(response.get_data())
+            self.assertEqual(return_data['message'][0]['content'],"Members Added")
 
     def test_04_bookissue(self):
-        book_issues = flask.json.loads(open("issuebook.json").read())
+        with open("tests/issuebook.json") as data:
+            book_issues = flask.json.loads(data.read())
+
         responses = []
         for x in book_issues:
             responses.append(self.app.post('/lms/issuebook', json={'selected_book':x['selected_book'], 'issueDate': x['issueDate'], 'selected_member': x['selected_member']}))            
@@ -41,7 +45,7 @@ class test_LibERP(unittest.TestCase):
         for response in responses:
             with self.subTest():
                 messages=flask.json.loads(response.get_data())['message']
-                self.assertIn("Book has been issued",messages)
+                self.assertIn("Book has been issued",messages[0]['content'])
 
     def test_05_bookreturn(self):
         transactions = flask.json.loads(self.app.get('/lms/getIssued').get_data())
@@ -52,21 +56,23 @@ class test_LibERP(unittest.TestCase):
         for response in responses:
             with self.subTest():
                 messages=flask.json.loads(response.get_data())['message']
-                self.assertIn("Book returned",messages)
+                self.assertIn("Book returned",messages[0]['content'])
 
     def test_06_issuelogic(self):
-        book_issues = flask.json.loads(open("issuebook.json").read())
+        with open("tests/issuebook.json") as data:
+            book_issues = flask.json.loads(data.read())
+
         responses = []
         x = book_issues[0]
         responses.append(self.app.post('/lms/issuebook', json={'selected_book':x['selected_book'], 'issueDate': x['issueDate'], 'selected_member': x['selected_member']}))            
 
-        self.assertIn("Member has reached maximum outstanding debt.",flask.json.loads(responses[0].get_data())['message'])
+        self.assertIn("Member has reached maximum outstanding debt.",flask.json.loads(responses[0].get_data())['message'][0]['content'])
      
     def test_07_paydebt(self):
         unpaid_transactions = flask.json.loads(self.app.get('/lms/getUnpaid').get_data())
         transaction = unpaid_transactions[0]
         response = self.app.post('/lms/payDebt',json={'paid_books':[{'transactionid': transaction['transactionid'], 'paid':'on'}]})
-        self.assertIn("Debt Paid",flask.json.loads(response.get_data())['message'])
+        self.assertIn("Debt Paid",flask.json.loads(response.get_data())['message'][0]['content'])
         
     # @classmethod
     # def tearDownClass(cls):

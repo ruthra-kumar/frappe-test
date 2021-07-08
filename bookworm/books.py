@@ -60,7 +60,7 @@ def addbooks():
 
                     try:
                         session.commit()
-                        current_app.logger.debug('Books added')
+                        # current_app.logger.debug('Books added')
                         add_return_message(return_msg['message'], 'Books Added', 'Success')
                     except Exception as commit_exception:
                         current_app.logger.debug(commit_exception.args)

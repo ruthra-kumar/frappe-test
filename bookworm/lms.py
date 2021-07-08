@@ -9,7 +9,7 @@ app = Blueprint('app', __name__)
 
 def add_return_message(msg_list, new_msg, msg_type):
     type = 'Success'
-    if msg_type == None:
+    if msg_type != None:
         type = msg_type
 
     msg_list.append({

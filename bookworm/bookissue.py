@@ -108,7 +108,7 @@ def book_issue_logic(member, book):
             fine = 100 if days_after_borrow_limit * 1 > 100 else days_after_borrow_limit * 1
             user_debt += fine
 
-    if user_debt >= 400:
+    if user_debt > 400:
         has_debt = True
         logic_decision['err_msgs'].append("Member has reached maximum outstanding debt.")
     else:
