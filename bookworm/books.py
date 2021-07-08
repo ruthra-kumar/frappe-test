@@ -34,7 +34,11 @@ def addbooks():
                 books_found = session.query(Book).filter(Book.bookid.in_(bookids))
                 if books_found.all() != []:
                     for x in books_found:
-                        return_msg['message'].append('Bookid {} already exists'.format(x.bookid))
+                        return_msg['message'].append({
+                            'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                            'type': 'Error',
+                            'content': 'Bookid {} already exists'.format(x.bookid)
+                        })
                 else:
 
                     # Add new books to DB session
