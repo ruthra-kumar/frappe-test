@@ -82,8 +82,10 @@ def get_unpaid_returns():
 
 def book_issue_logic(member, book):
     logic_decision = { 'can_borrow': False ,'err_msgs':[] }
-    max_debt = 500
     max_borrow = 5
+    max_fine_per_book = 100
+    max_debt = max_borrow * max_fine_per_book
+
     
     # book in stock
     have_stock = False
@@ -93,7 +95,7 @@ def book_issue_logic(member, book):
     else:
         logic_decision['err_msgs'].append("Book not in stock")
                     
-    # outstanding < 500
+    # Calculate outstanding debt
     has_debt = False
     user_debt = 0
     for x in member.returned_books:
@@ -108,7 +110,8 @@ def book_issue_logic(member, book):
             fine = 100 if days_after_borrow_limit * 1 > 100 else days_after_borrow_limit * 1
             user_debt += fine
 
-    if user_debt > 400:
+    # outstanding debt should be lower than 1*max_fine_per_book
+    if user_debt > (max_debt - (1 * max_fine_per_book)):
         has_debt = True
         logic_decision['err_msgs'].append("Member has reached maximum outstanding debt.")
     else:
@@ -116,9 +119,9 @@ def book_issue_logic(member, book):
     
     # Borrow limit
     borrow_limit_reached = True
-    borrow_power = (max_debt - user_debt) / 500
+    borrow_power = (max_debt - user_debt) / max_debt
     borrow_limit =int(borrow_power * max_borrow) if (int(borrow_power * max_borrow) < (max_borrow - len(member.holding_books))) else (max_borrow - len(member.holding_books))
-    # if (len(member.holding_books) >= borrow_limit):
+
     if borrow_limit == 0:
         logic_decision['err_msgs'].append("Member has reached borrow limit.")
     else:
